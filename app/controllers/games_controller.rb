@@ -1,5 +1,4 @@
 require 'open-uri'
-require 'json'
 
 class GamesController < ApplicationController
     
@@ -8,31 +7,21 @@ class GamesController < ApplicationController
     end
 
     def score
-        @attempt = params[:your_try] 
-        @result = message(@attempt, @letters)
+        @letters = params[:your_try] 
+        @word = (params[:word] || "").upcase
+        @included = included?(@word, @letters)
+        @english_word = english_word?(@word)
     end
 
     private
 
-    def included?(guess, letters)
-        guess.chars.all? { |letter| guess.count(letter) <= @letters.count(letter) }
-    end
-    
-    def message(attempt, letters)
-        if included?(attempt.upcase, letters)
-          if english_word?(attempt)
-            [score, "Congratulations! #{attempt} is a valid English word!"]
-          else
-            [0, "Sorry but #{attempt} can't be built out of #{letters}"]
-          end
-        else
-          [0, "Sorry but #{attempt} does not seem to be a valid English Word"]
-        end
-      end
+    def included?(word, letters)
+        word.chars.all? { |letter| word.count(letter) <= letters.count(letter) }
+    end    
       
-      def english_word?(word)
-        response = open("https://wagon-dictionary.herokuapp.com/#{word}")
-        json = JSON.parse(response.read)
-        return json['found']
-      end
+    def english_word?(word)
+      reponse = open("https://wagon-dictionary.herokuapp.com/#{word}")
+      json = JSON.parse(response.read)
+      return json['found']
+    end
 end
