@@ -20,7 +20,7 @@ class GamesController < ApplicationController
     end    
       
     def english_word?(word)
-      reponse = open("https://wagon-dictionary.herokuapp.com/#{word}")
+      response = open("https://wagon-dictionary.herokuapp.com/#{word}")
       json = JSON.parse(response.read)
       return json['found']
     end
