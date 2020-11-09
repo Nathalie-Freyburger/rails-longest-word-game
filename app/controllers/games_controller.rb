@@ -7,7 +7,7 @@ class GamesController < ApplicationController
     end
 
     def score
-        @letters = params[:your_try] 
+        @letters = params[:letters] 
         @word = (params[:word] || "").upcase
         @included = included?(@word, @letters)
         @english_word = english_word?(@word)
